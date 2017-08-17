@@ -2,6 +2,7 @@ package elice.me.loginapi;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -31,17 +32,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        mGoogleApiClient = makeGoogleApiClient(this);
+
+    }
+
+    private GoogleApiClient makeGoogleApiClient(FragmentActivity fragmentActivity) {
         GoogleSignInOptions gso = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, null)
+        return new GoogleApiClient.Builder(this)
+                .enableAutoManage(fragmentActivity , null)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-
     }
+
     @OnClick(R.id.sign_in_button)
     void googleLoginClicked() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
@@ -51,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==RC_SIGN_IN && resultCode==RESULT_OK){
+        if (requestCode == RC_SIGN_IN && resultCode == RESULT_OK) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         }
