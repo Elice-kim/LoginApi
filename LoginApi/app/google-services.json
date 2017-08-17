@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "972223608871",
+    "project_id": "solid-scheme-177101"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:972223608871:android:77967a1d2a964965",
+        "android_client_info": {
+          "package_name": "elice.me.loginapi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "972223608871-5kcvjjsfr8rfges95tvaglig9s4f8h7k.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "972223608871-nuqgc6ibchs0qn8dd1akufig3shtpiud.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "elice.me.loginapi",
+            "certificate_hash": "d450968206fd9c0d4ec3bb1b2fd7ac0aab4a9789"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDALrEY4jh4f_k9CIqe8iPYYFnnHeSHoFo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
