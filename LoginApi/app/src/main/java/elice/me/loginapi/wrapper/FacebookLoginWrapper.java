@@ -81,7 +81,7 @@ public class FacebookLoginWrapper implements FacebookCallback<LoginResult>, SnsW
 
     public void requestUserInfo() {
         final LoginSuccessCallback loginCallback = callback;
-        AccessToken token = AccessToken.getCurrentAccessToken();
+        final AccessToken token = AccessToken.getCurrentAccessToken();
         GraphRequest request = GraphRequest.newMeRequest(token,
                 new GraphRequest.GraphJSONObjectCallback() {
                     @Override
@@ -93,7 +93,7 @@ public class FacebookLoginWrapper implements FacebookCallback<LoginResult>, SnsW
                             try {
                                 email = object.getString("email");
                                 nick = object.getString("name");
-                                loginCallback.loginSuccess(userId, email, nick, "");
+                                loginCallback.loginSuccess(userId, email, nick, token.getToken());
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

@@ -6,6 +6,6 @@ package elice.me.loginapi.wrapper;
 
 public interface LoginSuccessCallback {
 
-    void loginSuccess(String userId, String email, String nick, String value);
+    void loginSuccess(String userId, String email, String nick, String token);
     void loginFail(String errorMessage);
 }

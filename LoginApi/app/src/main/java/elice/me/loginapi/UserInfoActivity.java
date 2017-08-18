@@ -16,6 +16,8 @@ public class UserInfoActivity extends AppCompatActivity {
     TextView idTextView;
     @BindView(R.id.nameTextView)
     TextView nameTextView;
+    @BindView(R.id.tokenTextView)
+    TextView tokenTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,7 @@ public class UserInfoActivity extends AppCompatActivity {
         emailTextView.setText("Email : " + intent.getStringExtra("email"));
         idTextView.setText("Id : " +intent.getStringExtra("id"));
         nameTextView.setText("Name : " +intent.getStringExtra("name"));
+        tokenTextView.setText("Token : "+intent.getStringExtra("token"));
     }
 
 }

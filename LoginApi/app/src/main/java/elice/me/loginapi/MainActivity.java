@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements LoginSuccessCallb
     }
 
     @OnClick(R.id.signin_fb)
-    void facebookClick(){
+    void facebookClick() {
         facebookLoginWrapper.onCreate();
         facebookLoginWrapper.open(MainActivity.this);
     }
@@ -71,30 +71,18 @@ public class MainActivity extends AppCompatActivity implements LoginSuccessCallb
     }
 
     @OnClick(R.id.signin_gp)
-    void googleClicked(){
+    void googleClicked() {
         googleLoginWrapper.open(MainActivity.this);
     }
 
-//    @OnClick(R.id.googleLogoutBtn)
-//    void googleLogoutClicked() {
-//        googleLoginWrapper.googleLogoutClicked(this);
-//    }
-
-//    @Override
-//    public void googleLogoutSuccess() {
-//        Toast.makeText(MainActivity.this, "로그아웃 성공", Toast.LENGTH_SHORT).show();
-//        googleLogoutBtn.setVisibility(View.GONE);
-//        googleSignBtn.setVisibility(View.VISIBLE);
-//    }
-
     @Override
-    public void loginSuccess(String userId, String email, String nick, String value) {
+    public void loginSuccess(String userId, String email, String nick, String token) {
         Log.e("get profile success", "call");
         Intent intent = new Intent(MainActivity.this, UserInfoActivity.class);
         intent.putExtra("email", email);
         intent.putExtra("id", userId);
         intent.putExtra("name", nick);
-        intent.putExtra("token", value);
+        intent.putExtra("token", token);
         startActivity(intent);
     }
 

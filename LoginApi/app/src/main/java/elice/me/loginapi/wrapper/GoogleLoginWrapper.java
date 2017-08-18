@@ -55,20 +55,11 @@ public class GoogleLoginWrapper implements SnsWrapper {
             GoogleSignInAccount account = result.getSignInAccount();
             googleLoginCallback.loginSuccess(account.getId(),
                     account.getEmail(),
-                    account.getDisplayName(), result.getSignInAccount().getIdToken());
+                    account.getDisplayName(), account.getIdToken());
         } else {
             googleLoginCallback.loginFail("login fail");
         }
     }
 
-//    public void googleLogoutClicked(final GoogleLogoutCallback logoutCallback) {
-//        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(
-//                new ResultCallback<Status>() {
-//                    @Override
-//                    public void onResult(Status status) {
-//                        logoutCallback.googleLogoutSuccess();
-//                    }
-//                });
-//    }
 }
 
