@@ -44,6 +44,7 @@ public class FacebookLoginWrapper implements FacebookCallback<LoginResult> {
                     .logInWithReadPermissions(activity, Arrays.asList("public_profile", "email"));
         }
     }
+
     public void onCreate() {
         LoginManager.getInstance().registerCallback(mCallbackManager, this);
     }
@@ -59,6 +60,7 @@ public class FacebookLoginWrapper implements FacebookCallback<LoginResult> {
     @Override
     public void onSuccess(LoginResult loginResult) {
         callback.onSuccess(loginResult.getAccessToken().getToken());
+
     }
 
     @Override
@@ -68,17 +70,17 @@ public class FacebookLoginWrapper implements FacebookCallback<LoginResult> {
 
     @Override
     public void onError(FacebookException error) {
-        callback.onError(error);
+        callback.onError(error.getMessage());
     }
 
     public void requestUser(final ProfileCallback profileCallback) {
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        GraphRequest request = GraphRequest.newMeRequest(accessToken,
+        AccessToken token = AccessToken.getCurrentAccessToken();
+        GraphRequest request = GraphRequest.newMeRequest(token,
                 new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
                         if (response.getError() != null) {
-                            profileCallback.onFailed(response.getError().getException());
+                            profileCallback.onFailed(response.getError().getException().getMessage());
                         } else {
                             userId = AccessToken.getCurrentAccessToken().getUserId();
                             try {
