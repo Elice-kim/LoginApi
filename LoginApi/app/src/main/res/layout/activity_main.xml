@@ -27,4 +27,26 @@
         android:layout_marginBottom="30dp"
         android:layout_marginTop="30dp" />
 
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/signin_fb"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:textSize="15sp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/facebook_bt_bg2"
+        android:text="페이스북으로 시작하기" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/signin_gp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="14dp"
+        android:gravity="center"
+        android:textSize="15sp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/google_bt_bg2"
+        android:text="구글로 시작하기"/>
+
+
 </LinearLayout>

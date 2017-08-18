@@ -3,6 +3,7 @@ package elice.me.loginapi.wrapper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -35,19 +36,21 @@ public class FacebookLoginWrapper implements FacebookCallback<LoginResult>, SnsW
         this.callback = callback;
     }
 
+    public void onCreate() {
+        LoginManager.getInstance().registerCallback(mCallbackManager, this);
+    }
+
     @Override
     public void open(FragmentActivity activity) {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         if (accessToken != null && !accessToken.isExpired()) {
-            requestUser();
+            requestUserInfo();
+            Log.e("login", "call");
         } else {
             LoginManager.getInstance()
                     .logInWithReadPermissions(activity, Arrays.asList("public_profile", "email"));
+            Log.e("request", "call");
         }
-    }
-
-    public void onCreate() {
-        LoginManager.getInstance().registerCallback(mCallbackManager, this);
     }
 
     public void onDestroy() {
@@ -61,12 +64,14 @@ public class FacebookLoginWrapper implements FacebookCallback<LoginResult>, SnsW
 
     @Override
     public void onSuccess(LoginResult loginResult) {
-        requestUser();
+        requestUserInfo();
+        Log.e("loginsuccess", "call");
+
     }
 
     @Override
     public void onCancel() {
-        callback.loginFail("Login canceled");
+        callback.loginFail("Login Canceled");
     }
 
     @Override
@@ -74,9 +79,9 @@ public class FacebookLoginWrapper implements FacebookCallback<LoginResult>, SnsW
         callback.loginFail(error.getMessage());
     }
 
-    private void requestUser() {
+    public void requestUserInfo() {
         final LoginSuccessCallback loginCallback = callback;
-        final AccessToken token = AccessToken.getCurrentAccessToken();
+        AccessToken token = AccessToken.getCurrentAccessToken();
         GraphRequest request = GraphRequest.newMeRequest(token,
                 new GraphRequest.GraphJSONObjectCallback() {
                     @Override
@@ -88,7 +93,7 @@ public class FacebookLoginWrapper implements FacebookCallback<LoginResult>, SnsW
                             try {
                                 email = object.getString("email");
                                 nick = object.getString("name");
-                                loginCallback.loginSuccess(userId, email, nick, token.getToken());
+                                loginCallback.loginSuccess(userId, email, nick, "");
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

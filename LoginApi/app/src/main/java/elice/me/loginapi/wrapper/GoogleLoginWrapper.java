@@ -9,8 +9,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 
 import static elice.me.loginapi.MainActivity.RC_SIGN_IN;
 
@@ -18,14 +16,12 @@ import static elice.me.loginapi.MainActivity.RC_SIGN_IN;
  * Created by elice.kim on 18/08/2017.
  */
 
-public class GoogleLoginWrapper {
+public class GoogleLoginWrapper implements SnsWrapper {
 
     private GoogleApiClient googleApiClient;
-    private FragmentActivity fragmentActivity;
-    private GoogleSignInCallback googleLoginCallback;
+    private LoginSuccessCallback googleLoginCallback;
 
-    public GoogleLoginWrapper(FragmentActivity fragmentActivity, GoogleSignInCallback callback) {
-        this.fragmentActivity = fragmentActivity;
+    public GoogleLoginWrapper(FragmentActivity fragmentActivity, LoginSuccessCallback callback) {
         this.googleApiClient = makeGoogleApiClient(fragmentActivity);
         this.googleLoginCallback = callback;
     }
@@ -41,12 +37,14 @@ public class GoogleLoginWrapper {
                 .build();
     }
 
-    public void signIn() {
+    @Override
+    public void open(FragmentActivity fragmentActivity) {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
         fragmentActivity.startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    public void onActivityResult(Intent data) {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
         handleSignInResult(result);
     }
@@ -55,22 +53,22 @@ public class GoogleLoginWrapper {
         Log.d("sign", "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             GoogleSignInAccount account = result.getSignInAccount();
-            googleLoginCallback.googleLoginSuccess(account.getId(),
+            googleLoginCallback.loginSuccess(account.getId(),
                     account.getEmail(),
-                    account.getDisplayName());
+                    account.getDisplayName(), result.getSignInAccount().getIdToken());
         } else {
-            googleLoginCallback.googleLoginFail();
+            googleLoginCallback.loginFail("login fail");
         }
     }
 
-    public void googleLogoutClicked(final GoogleLogoutCallback logoutCallback) {
-        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        logoutCallback.googleLogoutSuccess();
-                    }
-                });
-    }
+//    public void googleLogoutClicked(final GoogleLogoutCallback logoutCallback) {
+//        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(
+//                new ResultCallback<Status>() {
+//                    @Override
+//                    public void onResult(Status status) {
+//                        logoutCallback.googleLogoutSuccess();
+//                    }
+//                });
+//    }
 }
 
