@@ -1,8 +1,8 @@
 package elice.me.loginapi.wrapper;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -23,22 +23,23 @@ import java.util.Locale;
  * Created by elice.kim on 17/08/2017.
  */
 
-public class FacebookLoginWrapper implements FacebookCallback<LoginResult> {
+public class FacebookLoginWrapper implements FacebookCallback<LoginResult>, SnsWrapper {
 
     private CallbackManager mCallbackManager = CallbackManager.Factory.create();
     private String userId;
     private String email;
     private String nick;
-    private TokenCallback callback;
+    private LoginSuccessCallback callback;
 
-    public FacebookLoginWrapper(TokenCallback callback) {
+    public FacebookLoginWrapper(LoginSuccessCallback callback) {
         this.callback = callback;
     }
 
-    public void open(Activity activity) {
+    @Override
+    public void open(FragmentActivity activity) {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         if (accessToken != null && !accessToken.isExpired()) {
-            callback.onSuccess(accessToken.getToken());
+            requestUser();
         } else {
             LoginManager.getInstance()
                     .logInWithReadPermissions(activity, Arrays.asList("public_profile", "email"));
@@ -53,40 +54,41 @@ public class FacebookLoginWrapper implements FacebookCallback<LoginResult> {
         LoginManager.getInstance().unregisterCallback(mCallbackManager);
     }
 
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     public void onSuccess(LoginResult loginResult) {
-        callback.onSuccess(loginResult.getAccessToken().getToken());
-
+        requestUser();
     }
 
     @Override
     public void onCancel() {
-        callback.onCancel();
+        callback.loginFail("Login canceled");
     }
 
     @Override
     public void onError(FacebookException error) {
-        callback.onError(error.getMessage());
+        callback.loginFail(error.getMessage());
     }
 
-    public void requestUser(final ProfileCallback profileCallback) {
-        AccessToken token = AccessToken.getCurrentAccessToken();
+    private void requestUser() {
+        final LoginSuccessCallback loginCallback = callback;
+        final AccessToken token = AccessToken.getCurrentAccessToken();
         GraphRequest request = GraphRequest.newMeRequest(token,
                 new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
                         if (response.getError() != null) {
-                            profileCallback.onFailed(response.getError().getException().getMessage());
+                            loginCallback.loginFail(response.getError().getException().getMessage());
                         } else {
                             userId = AccessToken.getCurrentAccessToken().getUserId();
                             try {
                                 email = object.getString("email");
                                 nick = object.getString("name");
-                                profileCallback.onSuccess(userId, email, nick);
+                                loginCallback.loginSuccess(userId, email, nick, token.getToken());
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
